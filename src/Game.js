@@ -34,8 +34,30 @@ class Game extends Component {
       x  : 0.0,
       dx : 0.0,
       y  : 0.0,
-      dy : 0.0
+      dy : 0.0,
+      facing : "Right"
     }
+  }
+
+  spriteAnimation() {
+    let animation = ["Player", "Sprite"];
+    let dx = this.state.dx;
+    let dy = this.state.dy;
+    let facing = this.state.facing;
+
+    if (dy == 0.0) {
+      if (dx != 0.0) {
+        animation.push("Walk");
+      } else {
+        animation.push("Stand");
+      }
+    } else {
+      animation.push("Jump");
+    }
+
+    animation.push(facing);
+
+    return animation.join(" ");
   }
 
   handleKeys(value, event) {
@@ -77,10 +99,13 @@ class Game extends Component {
 
   walk(left, right) {
     let dx = this.state.dx;
+    let facing = this.state.facing;
 
     if (left && !right) {
+      facing = "Left";
       dx = Math.max(-MAX_MOVE_SPEED, (dx - GROUND_ACCEL));
     } else if (right && !left) {
+      facing = "Right";
       dx = Math.min(MAX_MOVE_SPEED, (dx + GROUND_ACCEL));
     } else {
       // Apply friction when player is:
@@ -95,7 +120,7 @@ class Game extends Component {
       }
     }
 
-    this.setState({dx : dx});
+    this.setState({dx : dx, facing : facing});
   }
 
   jump(up) {
@@ -151,6 +176,7 @@ class Game extends Component {
     const playerScore = this.state.playerScore;
     const x = this.state.x;
     const y = this.state.y + GROUND_HEIGHT;
+    const spriteAnimation = this.spriteAnimation();
 
     return (
       <div className="Game" style={{zoom : ZOOM_LEVEL}}>
@@ -161,7 +187,7 @@ class Game extends Component {
           <div className="ItemContainer" />
           <span className="PlayerScore">{playerScore}</span>
         </div>
-        <div ref="player" className="Player Sprite Stand Right" style={{left : x, bottom : y}} />
+        <div ref="player" className={spriteAnimation} style={{left : x, bottom : y}} />
       </div>
     );
   }
