@@ -42,11 +42,12 @@ class Game extends Component {
   spriteAnimation() {
     let animation = ["Player", "Sprite"];
     let dx = this.state.dx;
+    let y = this.state.y;
     let dy = this.state.dy;
     let facing = this.state.facing;
 
-    if (dy == 0.0) {
-      if (dx != 0.0) {
+    if (y <= -dy) {
+      if (dx !== 0.0) {
         animation.push("Walk");
       } else {
         animation.push("Stand");
@@ -87,7 +88,7 @@ class Game extends Component {
     let y = this.state.y;
     let dy = this.state.dy;
 
-    if (y < -dy) {
+    if (y <= -dy) {
       y = 0.0;
       dy = 0.0;
     } else {
@@ -111,7 +112,7 @@ class Game extends Component {
       // Apply friction when player is:
       // 1. not moving left or right
       // 2. attempting to move left and right simultaneously
-      if (Math.abs(dx) < this.friction()) {
+      if (Math.abs(dx) <= this.friction()) {
         dx = 0.0;
       } else if (dx > 0.0) {
         dx = dx - this.friction();
