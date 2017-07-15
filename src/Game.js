@@ -1,6 +1,11 @@
 import React, { Component } from 'react';
 import './Game.css';
 
+import BgMorning from './assets/bg-morning.png';
+import BgDay from './assets/bg-day.png';
+import BgEvening from './assets/bg-evening.png';
+import BgNight from './assets/bg-night.png';
+
 const KEY = {
   LEFT  : 37,
   RIGHT : 39,
@@ -17,8 +22,10 @@ const AIR_FRICTION = 0.02;
 const GRAVITY = 0.25;
 const MIN_JUMP_SPEED = 4.0;
 const JUMP_COEFFICIENT = 0.8;
-
 const GROUND_HEIGHT = 40;
+
+const BACKGROUNDS = [BgMorning, BgDay, BgEvening, BgNight];
+const BACKGROUND_TIMER = 10000;
 
 class Game extends Component {
   constructor() {
@@ -35,8 +42,11 @@ class Game extends Component {
       dx : 0.0,
       y  : 0.0,
       dy : 0.0,
-      facing : "Right"
+      facing : "Right",
+      bgRotation : 0
     }
+
+    this.changeBackground = this.changeBackground.bind(this);
   }
 
   spriteAnimation() {
@@ -169,7 +179,24 @@ class Game extends Component {
   componentDidMount() {
     window.addEventListener('keyup', this.handleKeys.bind(this, false));
     window.addEventListener('keydown', this.handleKeys.bind(this, true));
+    this.timer = setInterval(this.changeBackground, BACKGROUND_TIMER);
     this.update();
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timer);
+  }
+
+  // Sequentially change the background every 10s
+  changeBackground() {
+    let bgRotation = this.state.bgRotation;
+    if (bgRotation === BACKGROUNDS.length - 1) {
+      bgRotation = 0;
+    } else {
+      bgRotation++;
+    }
+
+    this.setState({bgRotation : bgRotation});
   }
 
   render() {
@@ -178,9 +205,10 @@ class Game extends Component {
     const x = this.state.x;
     const y = this.state.y + GROUND_HEIGHT;
     const spriteAnimation = this.spriteAnimation();
+    const background = "url(" + BACKGROUNDS[this.state.bgRotation] + ") center/cover repeat-x fixed #B0E9F8";
 
     return (
-      <div className="Game" style={{zoom : ZOOM_LEVEL}}>
+      <div className="Game" style={{zoom : ZOOM_LEVEL, background : background}}>
         <div className="Ground" />
         <div className="Hud">
           <span className="PlayerName">Mario</span>
