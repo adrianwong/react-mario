@@ -21,6 +21,7 @@ class Game extends Component {
           <div className="ItemContainer" />
           <span className="PlayerScore">{this.state.playerScore}</span>
         </div>
+        <div className="Player Sprite Stand Right" />
       </div>
     );
   }
