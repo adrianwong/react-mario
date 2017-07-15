@@ -60,6 +60,7 @@ class Game extends Component {
     return this.state.y > 0.0;
   }
 
+  // Player is continually pulled downwards if above ground
   applyGravity() {
     let y = this.state.y;
     let dy = this.state.dy;
@@ -82,6 +83,9 @@ class Game extends Component {
     } else if (right && !left) {
       dx = Math.min(MAX_MOVE_SPEED, (dx + GROUND_ACCEL));
     } else {
+      // Apply friction when player is:
+      // 1. not moving left or right
+      // 2. attempting to move left and right simultaneously
       if (Math.abs(dx) < this.friction()) {
         dx = 0.0;
       } else if (dx > 0.0) {
@@ -114,13 +118,14 @@ class Game extends Component {
     let y = this.state.y;
     let keys = this.state.keys;
 
+    this.applyGravity();
+
     const screenWidth = window.innerWidth / ZOOM_LEVEL;
     const playerWidth = this.refs.player.offsetWidth;
     const rightBoundary = screenWidth;
     const leftBoundary = -playerWidth;
 
-    this.applyGravity();
-
+    // Wrap the player around if they move off-screen
     this.walk(keys.left, keys.right);
     if (x > rightBoundary) {
       x -= screenWidth + playerWidth;
