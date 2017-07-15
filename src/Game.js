@@ -7,6 +7,8 @@ const KEY = {
   UP    : 38
 };
 
+const ZOOM_LEVEL = 3;
+
 const MAX_MOVE_SPEED = 2.5;
 const GROUND_ACCEL = 0.06;
 const GROUND_FRICTION = 0.1;
@@ -112,9 +114,19 @@ class Game extends Component {
     let y = this.state.y;
     let keys = this.state.keys;
 
+    const screenWidth = window.innerWidth / ZOOM_LEVEL;
+    const playerWidth = this.refs.player.offsetWidth;
+    const rightBoundary = screenWidth;
+    const leftBoundary = -playerWidth;
+
     this.applyGravity();
 
     this.walk(keys.left, keys.right);
+    if (x > rightBoundary) {
+      x -= screenWidth + playerWidth;
+    } else if (x < leftBoundary) {
+      x += screenWidth + playerWidth;
+    }
     x += this.state.dx;
 
     this.jump(keys.up);
@@ -138,7 +150,7 @@ class Game extends Component {
     const y = this.state.y + GROUND_HEIGHT;
 
     return (
-      <div className="Game">
+      <div className="Game" style={{zoom : ZOOM_LEVEL}}>
         <div className="Ground" />
         <div className="Hud">
           <span className="PlayerName">Mario</span>
@@ -146,7 +158,7 @@ class Game extends Component {
           <div className="ItemContainer" />
           <span className="PlayerScore">{playerScore}</span>
         </div>
-        <div className="Player Sprite Stand Right" style={{left : x, bottom : y}} />
+        <div ref="player" className="Player Sprite Stand Right" style={{left : x, bottom : y}} />
       </div>
     );
   }
