@@ -10,6 +10,8 @@ const KEY = {
 const MAX_MOVE_SPEED = 2.5;
 const GROUND_ACCEL = 0.06;
 const GROUND_FRICTION = 0.1;
+const AIR_ACCEL = 0.04;
+const AIR_FRICTION = 0.02;
 
 class Game extends Component {
   constructor() {
@@ -23,7 +25,9 @@ class Game extends Component {
         up    : 0
       },
       x  : 0.0,
-      dx : 0.0
+      dx : 0.0,
+      y  : 0.0,
+      dy : 0.0
     }
   }
 
@@ -37,6 +41,18 @@ class Game extends Component {
     this.setState({keys : keys});
   }
 
+  acceleration() {
+    return this.isAirborne() ? AIR_ACCEL : GROUND_ACCEL;
+  }
+
+  friction() {
+    return this.isAirborne() ? AIR_FRICTION : GROUND_FRICTION;
+  }
+
+  isAirborne() {
+    return this.state.y > 0.0;
+  }
+
   walk(left, right) {
     let dx = this.state.dx;
 
@@ -45,12 +61,12 @@ class Game extends Component {
     } else if (right) {
       dx = Math.min(MAX_MOVE_SPEED, (dx + GROUND_ACCEL));
     } else {
-      if (Math.abs(dx) < GROUND_FRICTION) {
+      if (Math.abs(dx) < this.friction()) {
         dx = 0.0;
       } else if (dx > 0.0) {
-        dx = dx - GROUND_FRICTION;
+        dx = dx - this.friction();
       } else {
-        dx = dx + GROUND_FRICTION;
+        dx = dx + this.friction();
       }
     }
 
