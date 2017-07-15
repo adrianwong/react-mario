@@ -56,6 +56,7 @@ class Game extends Component {
     let dy = this.state.dy;
     let facing = this.state.facing;
 
+    // If the player is not airborne, they are walking or standing
     if (y <= -dy) {
       if (dx !== 0.0) {
         animation.push("Walk");
@@ -66,6 +67,8 @@ class Game extends Component {
       animation.push("Jump");
     }
 
+    // Use the last direction the player was facing, which is set
+    // by pressing the "left" or "right" keys
     animation.push(facing);
 
     return animation.join(" ");
