@@ -5,6 +5,7 @@ class Game extends Component {
   render() {
     return (
       <div className="Game">
+        <div className="Background" />
       </div>
     );
   }
