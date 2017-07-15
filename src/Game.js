@@ -77,9 +77,9 @@ class Game extends Component {
   walk(left, right) {
     let dx = this.state.dx;
 
-    if (left) {
+    if (left && !right) {
       dx = Math.max(-MAX_MOVE_SPEED, (dx - GROUND_ACCEL));
-    } else if (right) {
+    } else if (right && !left) {
       dx = Math.min(MAX_MOVE_SPEED, (dx + GROUND_ACCEL));
     } else {
       if (Math.abs(dx) < this.friction()) {
