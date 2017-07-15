@@ -17,9 +17,7 @@
   zoom: 300%;
   image-rendering: -moz-pixelated; /* Firefox */
   image-rendering: pixelated;
-}
-
-.Background {
+  
   position: absolute;
   width: 100%;
   height: 100%;

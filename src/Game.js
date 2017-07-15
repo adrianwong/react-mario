@@ -139,7 +139,6 @@ class Game extends Component {
 
     return (
       <div className="Game">
-        <div className="Background" />
         <div className="Ground" />
         <div className="Hud">
           <span className="PlayerName">Mario</span>
