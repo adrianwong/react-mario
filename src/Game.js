@@ -103,8 +103,6 @@ class Game extends Component {
     let dy = this.state.dy;
 
     if (up) {
-      console.log("IS AIRBORNE: " + this.isAirborne());
-      console.log("Y VALUE: " + dy);
       if (!this.isAirborne()) {
         dy = MIN_JUMP_SPEED + JUMP_COEFFICIENT * Math.abs(dx);
       }
