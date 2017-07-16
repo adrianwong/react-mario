@@ -38,11 +38,13 @@ class Game extends Component {
         right : 0,
         up    : 0
       },
-      x  : 0.0,
-      dx : 0.0,
-      y  : 0.0,
-      dy : 0.0,
-      facing : "Right",
+      player : {
+        x  : 0.0,
+        dx : 0.0,
+        y  : 0.0,
+        dy : 0.0,
+        facing : "Right",
+      },
       bgRotation : 0
     }
 
@@ -51,14 +53,11 @@ class Game extends Component {
 
   spriteAnimation() {
     let animation = ["Player", "Sprite"];
-    let dx = this.state.dx;
-    let y = this.state.y;
-    let dy = this.state.dy;
-    let facing = this.state.facing;
+    let player = this.state.player;
 
     // If the player is not airborne, they are walking or standing
-    if (y <= -dy) {
-      if (dx !== 0.0) {
+    if (player.y <= -player.dy) {
+      if (player.dx !== 0.0) {
         animation.push("Walk");
       } else {
         animation.push("Stand");
@@ -69,7 +68,7 @@ class Game extends Component {
 
     // Use the last direction the player was facing, which is set
     // by pressing the "left" or "right" keys
-    animation.push(facing);
+    animation.push(player.facing);
 
     return animation.join(" ");
   }
@@ -93,66 +92,62 @@ class Game extends Component {
   }
 
   isAirborne() {
-    return this.state.y > 0.0;
+    return this.state.player.y > 0.0;
   }
 
   // Player is continually pulled downwards if above ground
   applyGravity() {
-    let y = this.state.y;
-    let dy = this.state.dy;
+    let player = this.state.player;
 
-    if (y <= -dy) {
-      y = 0.0;
-      dy = 0.0;
+    if (player.y <= -player.dy) {
+      player.y = 0.0;
+      player.dy = 0.0;
     } else {
-      dy = dy - GRAVITY;
+      player.dy = player.dy - GRAVITY;
     }
 
-    this.setState({y : y, dy : dy});
+    this.setState({player : player});
   }
 
   walk(left, right) {
-    let dx = this.state.dx;
-    let facing = this.state.facing;
+    let player = this.state.player;
 
     if (left && !right) {
-      facing = "Left";
-      dx = Math.max(-MAX_MOVE_SPEED, (dx - GROUND_ACCEL));
+      player.facing = "Left";
+      player.dx = Math.max(-MAX_MOVE_SPEED, (player.dx - GROUND_ACCEL));
     } else if (right && !left) {
-      facing = "Right";
-      dx = Math.min(MAX_MOVE_SPEED, (dx + GROUND_ACCEL));
+      player.facing = "Right";
+      player.dx = Math.min(MAX_MOVE_SPEED, (player.dx + GROUND_ACCEL));
     } else {
       // Apply friction when player is:
       // 1. not moving left or right
       // 2. attempting to move left and right simultaneously
-      if (Math.abs(dx) <= this.friction()) {
-        dx = 0.0;
-      } else if (dx > 0.0) {
-        dx = dx - this.friction();
+      if (Math.abs(player.dx) <= this.friction()) {
+        player.dx = 0.0;
+      } else if (player.dx > 0.0) {
+        player.dx = player.dx - this.friction();
       } else {
-        dx = dx + this.friction();
+        player.dx = player.dx + this.friction();
       }
     }
 
-    this.setState({dx : dx, facing : facing});
+    this.setState({player : player});
   }
 
   jump(up) {
-    let dx = this.state.dx;
-    let dy = this.state.dy;
+    let player = this.state.player;
 
     if (up) {
       if (!this.isAirborne()) {
-        dy = MIN_JUMP_SPEED + JUMP_COEFFICIENT * Math.abs(dx);
+        player.dy = MIN_JUMP_SPEED + JUMP_COEFFICIENT * Math.abs(player.dx);
       }
     }
 
-    this.setState({dy : dy});
+    this.setState({player : player});
   }
 
   update() {
-    let x = this.state.x;
-    let y = this.state.y;
+    let player = this.state.player;
     let keys = this.state.keys;
 
     this.applyGravity();
@@ -164,17 +159,17 @@ class Game extends Component {
 
     // Wrap the player around if they move off-screen
     this.walk(keys.left, keys.right);
-    if (x > rightBoundary) {
-      x -= screenWidth + playerWidth;
-    } else if (x < leftBoundary) {
-      x += screenWidth + playerWidth;
+    if (player.x > rightBoundary) {
+      player.x -= screenWidth + playerWidth;
+    } else if (player.x < leftBoundary) {
+      player.x += screenWidth + playerWidth;
     }
-    x += this.state.dx;
+    player.x += this.state.player.dx;
 
     this.jump(keys.up);
-    y += this.state.dy;
+    player.y += this.state.player.dy;
 
-    this.setState({x : x, y : y});
+    this.setState({player : player});
 
     requestAnimationFrame(() => {this.update()});
   }
@@ -205,8 +200,8 @@ class Game extends Component {
   render() {
     const playerLives = this.state.playerLives;
     const playerScore = this.state.playerScore;
-    const x = this.state.x;
-    const y = this.state.y + GROUND_HEIGHT;
+    const x = this.state.player.x;
+    const y = this.state.player.y + GROUND_HEIGHT;
     const spriteAnimation = this.spriteAnimation();
     const background = "url(" + BACKGROUNDS[this.state.bgRotation] + ") center/cover repeat-x fixed #B0E9F8";
 
