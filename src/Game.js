@@ -9,7 +9,8 @@ import BgNight from './assets/bg-night.png';
 const KEY = {
   LEFT  : 37,
   RIGHT : 39,
-  UP    : 38
+  UP    : 38,
+  SPACE : 32
 };
 
 const ZOOM_LEVEL = 3;
@@ -36,7 +37,8 @@ class Game extends Component {
       keys : {
         left  : 0,
         right : 0,
-        up    : 0
+        up    : 0,
+        space : 0
       },
       player : {
         x  : 0.0,
@@ -44,6 +46,7 @@ class Game extends Component {
         y  : 0.0,
         dy : 0.0,
         facing : "Right",
+        isBoosted : false
       },
       bgRotation : 0
     }
@@ -79,6 +82,7 @@ class Game extends Component {
     if (event.keyCode === KEY.LEFT) keys.left = value;
     if (event.keyCode === KEY.RIGHT) keys.right = value;
     if (event.keyCode === KEY.UP) keys.up = value;
+    if (event.keyCode === KEY.SPACE) keys.space = value;
 
     this.setState({keys : keys});
   }
@@ -102,6 +106,7 @@ class Game extends Component {
     if (player.y <= -player.dy) {
       player.y = 0.0;
       player.dy = 0.0;
+      player.isBoosted = false;
     } else {
       player.dy = player.dy - GRAVITY;
     }
@@ -146,6 +151,19 @@ class Game extends Component {
     this.setState({player : player});
   }
 
+  boost(space) {
+    let player = this.state.player;
+
+    if (space) {
+      if (this.isAirborne() && !player.isBoosted) {
+        player.dy = MIN_JUMP_SPEED + JUMP_COEFFICIENT * Math.abs(player.dx) * 2;
+        player.isBoosted = true;
+      }
+    }
+
+    this.setState({player : player});
+  }
+
   update() {
     let player = this.state.player;
     let keys = this.state.keys;
@@ -167,6 +185,7 @@ class Game extends Component {
     player.x += this.state.player.dx;
 
     this.jump(keys.up);
+    this.boost(keys.space);
     player.y += this.state.player.dy;
 
     this.setState({player : player});
