@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import './Game.css';
 
+import Player from './Player';
+
 import BgMorning from './assets/bg-morning.png';
 import BgDay from './assets/bg-day.png';
 import BgEvening from './assets/bg-evening.png';
@@ -54,28 +56,6 @@ class Game extends Component {
     }
 
     this.changeBackground = this.changeBackground.bind(this);
-  }
-
-  spriteAnimation() {
-    let animation = ["Player", "Sprite"];
-    let player = this.state.player;
-
-    // If the player is not airborne, they are walking or standing
-    if (player.y <= -player.dy) {
-      if (player.dx !== 0.0) {
-        animation.push("Walk");
-      } else {
-        animation.push("Stand");
-      }
-    } else {
-      animation.push("Jump");
-    }
-
-    // Use the last direction the player was facing, which is set
-    // by pressing the "left" or "right" keys
-    animation.push(player.facing);
-
-    return animation.join(" ");
   }
 
   handleKeys(value, event) {
@@ -220,9 +200,6 @@ class Game extends Component {
   render() {
     const playerLives = this.state.playerLives;
     const playerScore = this.state.playerScore;
-    const x = this.state.player.x;
-    const y = this.state.player.y + GROUND_HEIGHT;
-    const spriteAnimation = this.spriteAnimation();
     const background = "url(" + BACKGROUNDS[this.state.bgRotation] + ") center/cover repeat-x fixed #B0E9F8";
 
     return (
@@ -234,7 +211,7 @@ class Game extends Component {
           <div className="ItemContainer" />
           <span className="PlayerScore">{playerScore}</span>
         </div>
-        <div className={spriteAnimation} style={{left : x, bottom : y}} />
+        <Player player={this.state.player} GROUND_HEIGHT={GROUND_HEIGHT} />
       </div>
     );
   }

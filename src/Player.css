@@ -1,0 +1,32 @@
+.Player {
+  position: absolute;
+}
+
+.Sprite {
+  width: 27px;
+  height: 27px;
+}
+
+.Sprite.Stand.Right {
+  background: url("./assets/mario/stand/right.gif");
+}
+
+.Sprite.Stand.Left {
+  background: url("./assets/mario/stand/left.gif");
+}
+
+.Sprite.Walk.Right {
+  background: url("./assets/mario/walk/right.gif");
+}
+
+.Sprite.Walk.Left {
+  background: url("./assets/mario/walk/left.gif");
+}
+
+.Sprite.Jump.Right {
+  background: url("./assets/mario/jump/right.gif");
+}
+
+.Sprite.Jump.Left {
+  background: url("./assets/mario/jump/left.gif");
+}
