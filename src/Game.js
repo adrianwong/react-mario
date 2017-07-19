@@ -13,7 +13,7 @@ const KEY = {
   SPACE : 32
 };
 
-const ZOOM_LEVEL = 3;
+const SCALE_FACTOR = 3;
 
 const MAX_MOVE_SPEED = 2.5;
 const GROUND_ACCEL = 0.06;
@@ -144,7 +144,7 @@ class Game extends Component {
 
     this.applyGravity();
 
-    const screenWidth = window.innerWidth / ZOOM_LEVEL;
+    const screenWidth = window.innerWidth / SCALE_FACTOR;
     const rightBoundary = screenWidth;
     const leftBoundary = -PLAYER_WIDTH;
 
@@ -174,11 +174,13 @@ class Game extends Component {
 
   render() {
     return (
-      <div className="Game" style={{zoom : ZOOM_LEVEL}}>
+      <div className="Game">
         <Background />
-        <Ground />
-        <Hud playerLives={this.state.playerLives} playerScore={this.state.playerScore} />
-        <Player player={this.state.player} GROUND_HEIGHT={GROUND_HEIGHT} />
+        <div className="Scale">
+          <Ground />
+          <Hud playerLives={this.state.playerLives} playerScore={this.state.playerScore} />
+          <Player player={this.state.player} GROUND_HEIGHT={GROUND_HEIGHT} />
+        </div>
       </div>
     );
   }

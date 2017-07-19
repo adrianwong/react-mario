@@ -21,3 +21,17 @@
   width: 100%;
   height: 100%;
 }
+
+/* Hack to handle Firefox's inability to use zoom.
+   Set the width and height to 1/3rd of the screen,
+   then scale up by a factor of 3 */
+.Scale {
+  width: 33.33%; /* Fallback */
+  width: calc(100% / 3);
+
+  height: 33.33%; /* Fallback */
+  height: calc(100% / 3);
+
+  transform: scale(3.0);
+  transform-origin: 0 0;
+}
