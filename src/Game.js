@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './Game.css';
 
+import Hud from './Hud';
 import Player from './Player';
 
 import BgMorning from './assets/bg-morning.png';
@@ -198,19 +199,12 @@ class Game extends Component {
   }
 
   render() {
-    const playerLives = this.state.playerLives;
-    const playerScore = this.state.playerScore;
     const background = "url(" + BACKGROUNDS[this.state.bgRotation] + ") center/cover repeat-x fixed #B0E9F8";
 
     return (
       <div className="Game" style={{zoom : ZOOM_LEVEL, background : background}}>
         <div className="Ground" />
-        <div className="Hud">
-          <span className="PlayerName">Mario</span>
-          <span className="PlayerLives">{playerLives}</span>
-          <div className="ItemContainer" />
-          <span className="PlayerScore">{playerScore}</span>
-        </div>
+        <Hud playerLives={this.state.playerLives} playerScore={this.state.playerScore} />
         <Player player={this.state.player} GROUND_HEIGHT={GROUND_HEIGHT} />
       </div>
     );
