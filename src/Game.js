@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './Game.css';
 
 import Background from './Background';
+import Ground from './Ground';
 import Hud from './Hud';
 import Player from './Player';
 
@@ -175,7 +176,7 @@ class Game extends Component {
     return (
       <div className="Game" style={{zoom : ZOOM_LEVEL}}>
         <Background />
-        <div className="Ground" />
+        <Ground />
         <Hud playerLives={this.state.playerLives} playerScore={this.state.playerScore} />
         <Player player={this.state.player} GROUND_HEIGHT={GROUND_HEIGHT} />
       </div>

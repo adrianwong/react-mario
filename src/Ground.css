@@ -1,0 +1,10 @@
+.Ground {
+  position: absolute;
+  background:
+    url("./assets/grass.png") top repeat-x,
+    url("./assets/ground.png") top repeat #589C2A;
+  width: 100%;
+  min-width: 50px;
+  height: 40px;
+  bottom: 0;
+}
