@@ -1,13 +1,9 @@
 import React, { Component } from 'react';
 import './Game.css';
 
+import Background from './Background';
 import Hud from './Hud';
 import Player from './Player';
-
-import BgMorning from './assets/bg-morning.png';
-import BgDay from './assets/bg-day.png';
-import BgEvening from './assets/bg-evening.png';
-import BgNight from './assets/bg-night.png';
 
 const KEY = {
   LEFT  : 37,
@@ -30,9 +26,6 @@ const JUMP_COEFFICIENT = 0.8;
 const GROUND_HEIGHT = 40;
 const PLAYER_WIDTH = 27;
 
-const BACKGROUNDS = [BgMorning, BgDay, BgEvening, BgNight];
-const BACKGROUND_TIMER = 10000;
-
 class Game extends Component {
   constructor() {
     super();
@@ -52,11 +45,8 @@ class Game extends Component {
         dy : 0.0,
         facing : "Right",
         isBoosted : false
-      },
-      bgRotation : 0
+      }
     }
-
-    this.changeBackground = this.changeBackground.bind(this);
   }
 
   handleKeys(value, event) {
@@ -178,31 +168,13 @@ class Game extends Component {
   componentDidMount() {
     window.addEventListener('keyup', this.handleKeys.bind(this, false));
     window.addEventListener('keydown', this.handleKeys.bind(this, true));
-    this.timer = setInterval(this.changeBackground, BACKGROUND_TIMER);
     this.update();
   }
 
-  componentWillUnmount() {
-    clearInterval(this.timer);
-  }
-
-  // Sequentially change the background every 10s
-  changeBackground() {
-    let bgRotation = this.state.bgRotation;
-    if (bgRotation === BACKGROUNDS.length - 1) {
-      bgRotation = 0;
-    } else {
-      bgRotation++;
-    }
-
-    this.setState({bgRotation : bgRotation});
-  }
-
   render() {
-    const background = "url(" + BACKGROUNDS[this.state.bgRotation] + ") center/cover repeat-x fixed #B0E9F8";
-
     return (
-      <div className="Game" style={{zoom : ZOOM_LEVEL, background : background}}>
+      <div className="Game" style={{zoom : ZOOM_LEVEL}}>
+        <Background />
         <div className="Ground" />
         <Hud playerLives={this.state.playerLives} playerScore={this.state.playerScore} />
         <Player player={this.state.player} GROUND_HEIGHT={GROUND_HEIGHT} />
