@@ -23,7 +23,9 @@ const AIR_FRICTION = 0.02;
 const GRAVITY = 0.25;
 const MIN_JUMP_SPEED = 4.0;
 const JUMP_COEFFICIENT = 0.8;
+
 const GROUND_HEIGHT = 40;
+const PLAYER_WIDTH = 27;
 
 const BACKGROUNDS = [BgMorning, BgDay, BgEvening, BgNight];
 const BACKGROUND_TIMER = 10000;
@@ -171,16 +173,15 @@ class Game extends Component {
     this.applyGravity();
 
     const screenWidth = window.innerWidth / ZOOM_LEVEL;
-    const playerWidth = this.refs.player.offsetWidth;
     const rightBoundary = screenWidth;
-    const leftBoundary = -playerWidth;
+    const leftBoundary = -PLAYER_WIDTH;
 
     // Wrap the player around if they move off-screen
     this.walk(keys.left, keys.right);
     if (player.x > rightBoundary) {
-      player.x -= screenWidth + playerWidth;
+      player.x -= screenWidth + PLAYER_WIDTH;
     } else if (player.x < leftBoundary) {
-      player.x += screenWidth + playerWidth;
+      player.x += screenWidth + PLAYER_WIDTH;
     }
     player.x += this.state.player.dx;
 
@@ -233,7 +234,7 @@ class Game extends Component {
           <div className="ItemContainer" />
           <span className="PlayerScore">{playerScore}</span>
         </div>
-        <div ref="player" className={spriteAnimation} style={{left : x, bottom : y}} />
+        <div className={spriteAnimation} style={{left : x, bottom : y}} />
       </div>
     );
   }
